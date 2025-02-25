@@ -1,0 +1,189 @@
+# 🖥️ Selenium Framework with Page Object Model (POM) & Multi-Browser Support
+
+## 🚀 Overview
+This is a **Selenium test automation framework** built from scratch using the **Page Object Model (POM)**. It supports testing on multiple browsers (**Chrome, Firefox, Edge**) and ensures better test maintainability and scalability.
+
+---
+## 🎯 Features
+✅ **Page Object Model (POM)** for better code reusability  
+✅ **Multi-browser support** (Chrome, Firefox, Edge)  
+✅ **TestNG integration** for test execution and reporting  
+✅ **Maven support** for dependency management  
+✅ **Configurable properties file** for easy setup  
+
+---
+## 📂 Project Structure
+```
+selenium-framework/
+│-- src/main/java/
+│   ├── base/                  # Base class for WebDriver setup
+│   ├── pages/                 # Page classes following POM
+│   ├── utils/                 # Utility classes (e.g., config reader)
+│-- src/test/java/
+│   ├── tests/                 # Test cases
+│   ├── resources/             # Test data & configuration files
+│-- pom.xml                    # Maven dependencies
+│-- testng.xml                 # TestNG suite configuration
+```
+
+---
+## ⚙️ Setup Instructions
+### 🔹 Prerequisites
+- Install **Java (JDK 11+)**
+- Install **Maven**
+- Install **Eclipse/IntelliJ**
+- Install **WebDriver binaries** (ChromeDriver, GeckoDriver, etc.)
+
+### 🔹 Clone the Repository
+```sh
+git clone https://github.com/your-repo/selenium-framework.git
+cd selenium-framework
+```
+
+### 🔹 Install Dependencies
+```sh
+mvn clean install
+```
+
+### 🔹 Configure Browsers
+Modify `config.properties` in `src/test/resources/`:
+```properties
+browser=chrome  # Options: chrome, firefox, edge
+url=https://example.com
+```
+
+---
+## ▶️ Running Tests
+### 💻 Run Tests Using Maven
+```sh
+mvn test
+```
+
+### 🧪 Run Tests Using TestNG
+```sh
+mvn test -DsuiteXmlFile=testng.xml
+```
+
+---
+## 🏗️ Page Object Model (POM) Implementation
+### 🔹 Login Page Example
+```java
+package pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LoginPage {
+    WebDriver driver;
+
+    // Locators
+    By username = By.id("username");
+    By password = By.id("password");
+    By loginButton = By.id("login");
+
+    // Constructor
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    // Methods
+    public void enterUsername(String user) {
+        driver.findElement(username).sendKeys(user);
+    }
+
+    public void enterPassword(String pass) {
+        driver.findElement(password).sendKeys(pass);
+    }
+
+    public void clickLogin() {
+        driver.findElement(loginButton).click();
+    }
+}
+```
+
+---
+## 🌍 Multi-Browser Support
+### 🔹 Base Class Example
+```java
+package base;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import java.util.concurrent.TimeUnit;
+
+public class BaseTest {
+    public WebDriver driver;
+    
+    public WebDriver initializeDriver(String browser) {
+        if (browser.equalsIgnoreCase("chrome")) {
+            driver = new ChromeDriver();
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            driver = new FirefoxDriver();
+        } else if (browser.equalsIgnoreCase("edge")) {
+            driver = new EdgeDriver();
+        }
+        
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        return driver;
+    }
+}
+```
+
+---
+## ✅ Test Case Example
+### 🔹 Login Test with TestNG
+```java
+package tests;
+
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import base.BaseTest;
+import pages.LoginPage;
+
+public class LoginTest extends BaseTest {
+    WebDriver driver;
+    LoginPage login;
+
+    @BeforeClass
+    public void setup() {
+        driver = initializeDriver("chrome");
+        driver.get("https://example.com");
+        login = new LoginPage(driver);
+    }
+
+    @Test
+    public void testLogin() {
+        login.enterUsername("testuser");
+        login.enterPassword("password123");
+        login.clickLogin();
+        // Add assertion here
+    }
+
+    @AfterClass
+    public void tearDown() {
+        driver.quit();
+    }
+}
+```
+
+---
+## 📊 Reporting
+📌 Test results are generated in the `test-output` folder when using TestNG.  
+📌 Can integrate **Extent Reports** for better reporting.
+
+---
+## 🔥 Future Enhancements
+🔹 Implement **data-driven testing** (Excel, JSON, DB)  
+🔹 Add **parallel execution** using TestNG  
+🔹 Integrate with **CI/CD pipelines** (Jenkins, GitHub Actions)  
+
+---
+## ✨ Author
+[Kashif Khan]github.com/Kashif-khannn
+
+---
+🚀 **Happy Testing!** 🎯
